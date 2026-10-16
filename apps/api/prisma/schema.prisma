@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  viewer
+}
+
+model User {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  passwordHash String
+  role         UserRole
+  createdAt    DateTime @default(now())
+
+  @@map("users")
+}
+
+enum DeviceProtocol {
+  modbus
+  mqtt
+}
+
+enum DeviceStatus {
+  connected
+  disconnected
+  error
+}
+
+model Device {
+  id         String        @id @default(uuid())
+  name       String
+  protocol   DeviceProtocol
+  // Modbus: { host, port, unitId, registers: {...} }  MQTT: { brokerUrl, telemetryTopic, statusTopic }
+  config     Json
+  status     DeviceStatus  @default(disconnected)
+  lastSeenAt DateTime?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  readings SignalReading[]
+
+  @@map("devices")
+}
+
+// Protokolden bağımsız, ortak sinyal modeli — case'in istediği 5 sinyal her iki bant için de
+// aynı enum ile temsil edilir (bkz. apps/api/src/connectors normalize katmanı).
+enum SignalType {
+  production_count
+  motor_temp
+  motor_current
+  line_status
+  scrap_count
+}
+
+model SignalReading {
+  id         String     @id @default(uuid())
+  deviceId   String
+  device     Device     @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  signalType SignalType
+  value      Float
+  unit       String
+  timestamp  DateTime
+
+  @@index([deviceId, signalType, timestamp])
+  @@map("signal_readings")
+}
