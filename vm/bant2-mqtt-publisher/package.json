@@ -1,0 +1,21 @@
+{
+  "name": "@factoredge/band2-mqtt-publisher",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest run",
+    "verify": "node scripts/verify-topic.mjs"
+  },
+  "dependencies": {
+    "@factoredge/sim-core": "file:../../packages/sim-core",
+    "mqtt": "^5.10.3",
+    "tsx": "^4.19.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
+}

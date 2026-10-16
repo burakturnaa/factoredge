@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "vm/bant1-modbus",
+    "vm/bant2-mqtt-publisher"
   ],
   "scripts": {
     "dev:api": "npm run dev --workspace=apps/api",

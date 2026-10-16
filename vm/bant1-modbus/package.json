@@ -1,0 +1,22 @@
+{
+  "name": "@factoredge/band1-modbus",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest run",
+    "verify": "node scripts/verify-registers.mjs"
+  },
+  "dependencies": {
+    "@factoredge/sim-core": "file:../../packages/sim-core",
+    "jsmodbus": "^4.0.10",
+    "tsx": "^4.19.2"
+  },
+  "devDependencies": {
+    "modbus-serial": "^8.0.17",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
+}
