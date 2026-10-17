@@ -11,32 +11,44 @@ const error = ref("");
 
 const SIGNAL_TYPES: SignalType[] = ["production_count", "motor_temp", "motor_current", "line_status", "scrap_count"];
 
+// VM'in host-only IP'si — sadece formun varsayılan değerleri için (gerçek cihaz config'i DB'de
+// saklanır). Farklı bir ortamda çalışıyorsanız VITE_SIMULATOR_HOST ile override edebilirsiniz.
+const DEFAULT_SIMULATOR_HOST = import.meta.env.VITE_SIMULATOR_HOST ?? "192.168.58.5";
+
 function emptyRegister() {
   return { address: 30001, fc: 4 as 3 | 4, dataType: "uint16" as const, wordOrder: "ABCD" as const, scale: 1, unit: "" };
+}
+
+function emptyModbusConfig() {
+  return {
+    host: DEFAULT_SIMULATOR_HOST,
+    port: 5020,
+    unitId: 1,
+    registers: Object.fromEntries(SIGNAL_TYPES.map((s) => [s, emptyRegister()])) as Record<SignalType, ReturnType<typeof emptyRegister>>,
+  };
+}
+
+function emptyMqttConfig() {
+  return {
+    brokerUrl: `mqtt://${DEFAULT_SIMULATOR_HOST}:1883`,
+    telemetryTopic: "factoryedge/band2/telemetry",
+    statusTopic: "factoryedge/band2/status",
+  };
 }
 
 const form = reactive({
   name: "",
   protocol: "modbus" as DeviceProtocol,
-  modbus: {
-    host: "127.0.0.1",
-    port: 5020,
-    unitId: 1,
-    registers: Object.fromEntries(SIGNAL_TYPES.map((s) => [s, emptyRegister()])) as Record<SignalType, ReturnType<typeof emptyRegister>>,
-  },
-  mqtt: {
-    brokerUrl: "mqtt://127.0.0.1:1883",
-    telemetryTopic: "factoryedge/band2/telemetry",
-    statusTopic: "factoryedge/band2/status",
-  },
+  modbus: emptyModbusConfig(),
+  mqtt: emptyMqttConfig(),
 });
 
 function resetForm(): void {
   editingId.value = null;
   form.name = "";
   form.protocol = "modbus";
-  form.modbus = { host: "127.0.0.1", port: 5020, unitId: 1, registers: Object.fromEntries(SIGNAL_TYPES.map((s) => [s, emptyRegister()])) as any };
-  form.mqtt = { brokerUrl: "mqtt://127.0.0.1:1883", telemetryTopic: "factoryedge/band2/telemetry", statusTopic: "factoryedge/band2/status" };
+  form.modbus = emptyModbusConfig();
+  form.mqtt = emptyMqttConfig();
 }
 
 function openCreateForm(): void {

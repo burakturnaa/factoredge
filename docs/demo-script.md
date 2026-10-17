@@ -52,5 +52,5 @@ Tarayıcıda `http://localhost:5173` açık tutulur, `admin`/`admin123` ile önc
 
 ## Prova geri bildirimi (her provadan sonra doldurulacak)
 
-- [ ] 1. prova — tarih/saat: ____ — sorunlar: ____
+- [x] 1. prova — 2026-10-17 18:00 — Tüm 8 adım sorunsuz çalıştı: login→dashboard anlık geçiş, canlı veri güncellemesi gözle görülür, history grafiği cihaz/sinyal değişince doğru güncellendi, kesinti senaryosu (Bant1 durdu→Bant2 etkilenmedi→Bant1 kendiliğinden toparlandı) birebir beklendiği gibi, cihaz/kullanıcı CRUD + rol kısıtlaması (nav gizleme + route guard) hepsi çalıştı. **Tek bulgu**: "Cihaz Ekle" formunun varsayılan MQTT broker adresi hâlâ eski host-Docker IP'sini (`127.0.0.1`) gösteriyordu (VM'e taşımadan kalma) — `DevicesPage.vue`'da `VITE_SIMULATOR_HOST` ile düzeltildi, kod commit edildi. Demo akışı ~8 dakika sürdü.
 - [ ] 2. prova — tarih/saat: ____ — sorunlar: ____
