@@ -26,9 +26,12 @@ async function main() {
   await upsertUser("admin", "admin123", "admin");
   await upsertUser("viewer", "viewer123", "viewer");
 
-  // Şu an host'ta docker compose ile test ediliyor; VM'e taşınınca host/brokerUrl güncellenecek.
+  // VM'in host-only ağdaki statik IP'si (bkz. README "VM Kurulum Adımları").
+  // Host'ta docker compose ile test ediliyorsa SIMULATOR_HOST=127.0.0.1 olarak override edilebilir.
+  const simulatorHost = process.env.SIMULATOR_HOST ?? "192.168.58.5";
+
   await upsertDevice("Bant 1", "modbus", {
-    host: "127.0.0.1",
+    host: simulatorHost,
     port: 5020,
     unitId: 1,
     registers: {
@@ -41,7 +44,7 @@ async function main() {
   });
 
   await upsertDevice("Bant 2", "mqtt", {
-    brokerUrl: "mqtt://127.0.0.1:1883",
+    brokerUrl: `mqtt://${simulatorHost}:1883`,
     telemetryTopic: "factoryedge/band2/telemetry",
     statusTopic: "factoryedge/band2/status",
   });
